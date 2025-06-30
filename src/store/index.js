@@ -1,10 +1,15 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from "@reduxjs/toolkit";
+import { restaurantsApi } from "../features/restaurants/restaurantsApi";
 
 export const store = configureStore({
   reducer: {
-    _placeholder: (state = {}) => state,
+    [restaurantsApi.reducerPath]: restaurantsApi.reducer,
   },
-  devTools: process.env.NODE_ENV !== 'production',
-})
 
-export default store
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(restaurantsApi.middleware),
+
+  devTools: process.env.NODE_ENV !== "production",
+});
+
+export default store;
