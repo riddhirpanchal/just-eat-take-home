@@ -1,34 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Container, Title, Text, Box } from '@mantine/core'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Container size="xl" py="xl">
+      <Box ta="center" mb="xl">
+        <Title order={1} size="h1" fw={900} mb="md">
+          🍽️ Restaurant Finder
+        </Title>
+        <Text size="lg" c="dimmed">
+          Discover great restaurants in your area using Just Eat
+        </Text>
+      </Box>
+      
+      <Box ta="center" mt="xl">
+        <Text c="dimmed">
+          Coming soon: Search functionality and restaurant listings
+        </Text>
+      </Box>
+    </Container>
   )
 }
 
