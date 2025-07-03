@@ -12,16 +12,15 @@ import {
   Flex,
   Pagination,
   Title as MantineTitle,
-  Autocomplete,
-  MultiSelect,
-  Switch,
   Grid,
   Paper,
-  Divider,
 } from "@mantine/core";
+import { IconServerOff } from "@tabler/icons-react";
 import { useGetRestaurantsByPostcodeQuery } from "../features/restaurants/restaurantsApi";
 import { RestaurantList } from "../features/restaurants/RestaurantList";
 import { resetSearch } from "../features/search/searchSlice";
+import { useRestaurantFilters } from "../hooks/useRestaurantFilters";
+import { FilterSidebar } from "../components/FilterSidebar";
 
 const ITEMS_PER_PAGE = 9;
 
@@ -29,30 +28,16 @@ const PageWrapper = styled(Box)`
   background-color: ${(props) => props.theme.colors.orange[0]};
   min-height: 100vh;
 `;
-
 const PageTitle = styled(MantineTitle)`
   span {
     color: ${(props) => props.theme.colors.orange[7]};
   }
 `;
 
-const FilterSidebar = styled(Paper)`
-  padding: ${(props) => props.theme.spacing.md};
-  border-radius: ${(props) => props.theme.radius.md};
-`;
-
 export function RestaurantListPage() {
   const dispatch = useDispatch();
   const { postcode, area } = useSelector((state) => state.search);
-
   const [activePage, setActivePage] = useState(1);
-  const [searchValue, setSearchValue] = useState("");
-  const [selectedCuisines, setSelectedCuisines] = useState([]);
-  const [filterToggles, setFilterToggles] = useState({
-    openNow: false,
-    new: false,
-    freeDelivery: false,
-  });
 
   const { data, isLoading, isSuccess, isError, error } =
     useGetRestaurantsByPostcodeQuery(postcode, {
@@ -68,6 +53,16 @@ export function RestaurantListPage() {
     if (!data || Array.isArray(data)) return undefined;
     return data.metaData;
   }, [data]);
+
+  const {
+    filteredRestaurants,
+    searchValue,
+    setSearchValue,
+    selectedCuisines,
+    setSelectedCuisines,
+    filterToggles,
+    setFilterToggles,
+  } = useRestaurantFilters(allRestaurants);
 
   const cuisineOptions = useMemo(() => {
     if (!metaData?.cuisineDetails) return [];
@@ -87,52 +82,12 @@ export function RestaurantListPage() {
     return [...new Set(combinedList)];
   }, [allRestaurants]);
 
-  const filteredRestaurants = useMemo(() => {
-    if (!allRestaurants) return [];
-
-    let restaurants = [...allRestaurants];
-
-    if (filterToggles.openNow) {
-      restaurants = restaurants.filter((r) => r.isOpenNowForDelivery);
-    }
-    if (filterToggles.new) {
-      restaurants = restaurants.filter((r) => r.isNew);
-    }
-    if (filterToggles.freeDelivery) {
-      restaurants = restaurants.filter((r) => r.deliveryCost === 0);
-    }
-
-    if (selectedCuisines.length > 0) {
-      restaurants = restaurants.filter((r) =>
-        r.cuisines?.some((c) => selectedCuisines.includes(c.uniqueName))
-      );
-    }
-
-    const lowercasedSearchValue = searchValue.toLowerCase();
-    if (lowercasedSearchValue) {
-      restaurants = restaurants.filter(
-        (r) =>
-          r.name?.toLowerCase().includes(lowercasedSearchValue) ||
-          r.cuisines?.some((c) =>
-            c.name?.toLowerCase().includes(lowercasedSearchValue)
-          )
-      );
-    }
-
-    return restaurants;
-  }, [allRestaurants, searchValue, selectedCuisines, filterToggles]);
-
   useEffect(() => {
     setActivePage(1);
   }, [filteredRestaurants]);
 
   const handleGoBack = () => {
     dispatch(resetSearch());
-  };
-
-  const handleToggleChange = (e) => {
-    const { name, checked } = e.currentTarget;
-    setFilterToggles((prev) => ({ ...prev, [name]: checked }));
   };
 
   let content;
@@ -176,9 +131,36 @@ export function RestaurantListPage() {
       </>
     );
   } else if (isError) {
+    let errorTitle = "Request Failed";
+    let errorMessage = "An unexpected error occurred. Please try again later.";
+
+    if (error) {
+      if ("status" in error) {
+        if (error.status === 404) {
+          errorTitle = "Postcode Not Found";
+          errorMessage = `We couldn't find any results for the postcode "${postcode}". Please check that it's correct and try again.`;
+        } else if (error.status >= 500) {
+          errorTitle = "Server Error";
+          errorMessage =
+            "There seems to be a temporary problem with our service. Please try again in a few moments.";
+        } else if (error.status === "CUSTOM_ERROR") {
+          errorTitle = "Network Error";
+          errorMessage = error.error;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+    }
+
     content = (
-      <Alert color="red" title="Error!">
-        {error.data?.message || "Could not fetch restaurants."}
+      <Alert
+        icon={<IconServerOff size="1.5rem" />}
+        title={errorTitle}
+        color="red"
+        variant="light"
+        radius="md"
+      >
+        {errorMessage}
       </Alert>
     );
   }
@@ -205,59 +187,16 @@ export function RestaurantListPage() {
 
         <Grid>
           <Grid.Col span={{ base: 12, md: 4, lg: 3 }}>
-            <FilterSidebar withBorder>
-              <Text fw={700} mb="md">
-                Filter Results
-              </Text>
-              <Divider mb="md" />
-
-              <Autocomplete
-                label="Search by name or cuisine"
-                placeholder="e.g., Pizza, KFC"
-                data={autocompleteData}
-                value={searchValue}
-                onChange={setSearchValue}
-                mb="md"
-                clearable
-              />
-
-              <MultiSelect
-                label="Filter by cuisine category"
-                placeholder="Select categories"
-                data={cuisineOptions}
-                value={selectedCuisines}
-                onChange={setSelectedCuisines}
-                mb="lg"
-                searchable
-                clearable
-              />
-
-              <Divider label="More options" labelPosition="center" mb="md" />
-
-              <Switch
-                label="Open Now"
-                name="openNow"
-                checked={filterToggles.openNow}
-                onChange={handleToggleChange}
-                color="orange"
-                mb="sm"
-              />
-              <Switch
-                label="New"
-                name="new"
-                checked={filterToggles.new}
-                onChange={handleToggleChange}
-                color="orange"
-                mb="sm"
-              />
-              <Switch
-                label="Free Delivery"
-                name="freeDelivery"
-                checked={filterToggles.freeDelivery}
-                onChange={handleToggleChange}
-                color="orange"
-              />
-            </FilterSidebar>
+            <FilterSidebar
+              autocompleteData={autocompleteData}
+              cuisineOptions={cuisineOptions}
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+              selectedCuisines={selectedCuisines}
+              setSelectedCuisines={setSelectedCuisines}
+              filterToggles={filterToggles}
+              setFilterToggles={setFilterToggles}
+            />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 8, lg: 9 }}>{content}</Grid.Col>

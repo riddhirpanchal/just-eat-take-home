@@ -9,12 +9,27 @@ const realBaseQuery = fetchBaseQuery({
 
 const customBaseQuery = async (args, api, extraOptions) => {
   if (useMockData) {
-    console.log("Using mock data for request:", args);
     await new Promise((resolve) => setTimeout(resolve, 500));
-
     return { data: mockData };
   }
-  return realBaseQuery(args, api, extraOptions);
+
+  try {
+    const result = await realBaseQuery(args, api, extraOptions);
+
+    if (result.error) {
+      console.error("API Error:", result.error);
+    }
+    return result;
+  } catch (error) {
+    console.error("Network or other fetch error:", error);
+    return {
+      error: {
+        status: "CUSTOM_ERROR",
+        error:
+          "A network error occurred. Please check your connection and try again.",
+      },
+    };
+  }
 };
 
 export const restaurantsApi = createApi({
