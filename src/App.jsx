@@ -1,24 +1,15 @@
-import { Container, Title, Text, Box } from '@mantine/core'
+import { useSelector } from "react-redux";
+import { HomePage } from "./pages/HomePage";
+import { RestaurantListPage } from "./pages/RestaurantListPage";
 
 function App() {
-  return (
-    <Container size="xl" py="xl">
-      <Box ta="center" mb="xl">
-        <Title order={1} size="h1" fw={900} mb="md">
-          🍽️ Restaurant Finder
-        </Title>
-        <Text size="lg" c="dimmed">
-          Discover great restaurants in your area using Just Eat
-        </Text>
-      </Box>
-      
-      <Box ta="center" mt="xl">
-        <Text c="dimmed">
-          Coming soon: Search functionality and restaurant listings
-        </Text>
-      </Box>
-    </Container>
-  )
+  const searchStatus = useSelector((state) => state.search.status);
+
+  if (searchStatus === "searched") {
+    return <RestaurantListPage />;
+  }
+
+  return <HomePage />;
 }
 
-export default App
+export default App;
