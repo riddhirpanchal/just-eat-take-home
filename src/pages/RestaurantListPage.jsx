@@ -17,7 +17,7 @@ import {
 } from "@mantine/core";
 import { IconServerOff } from "@tabler/icons-react";
 import { useGetRestaurantsByPostcodeQuery } from "../features/restaurants/restaurantsApi";
-import { RestaurantList } from "../features/restaurants/RestaurantList";
+import { RestaurantList } from "../components/RestaurantList";
 import { resetSearch } from "../features/search/searchSlice";
 import { useRestaurantFilters } from "../hooks/useRestaurantFilters";
 import { FilterSidebar } from "../components/FilterSidebar";
