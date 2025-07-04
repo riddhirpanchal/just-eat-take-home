@@ -1,3 +1,5 @@
+// src/features/restaurants/restaurantsApi.js
+
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import mockData from "../../mock.json";
 
@@ -7,7 +9,7 @@ const realBaseQuery = fetchBaseQuery({
   baseUrl: "/api/",
 });
 
-const customBaseQuery = async (args, api, extraOptions) => {
+export const customBaseQuery = async (args, api, extraOptions) => {
   if (useMockData) {
     await new Promise((resolve) => setTimeout(resolve, 500));
     return { data: mockData };
@@ -34,7 +36,7 @@ const customBaseQuery = async (args, api, extraOptions) => {
 
 export const restaurantsApi = createApi({
   reducerPath: "restaurantsApi",
-  baseQuery: customBaseQuery,
+  baseQuery: customBaseQuery, // No change here
   endpoints: (builder) => ({
     getRestaurantsByPostcode: builder.query({
       query: (postcode) =>

@@ -14,6 +14,7 @@ import {
 } from "@mantine/core";
 import { setSearchQuery } from "../features/search/searchSlice";
 import heroImageUrl from "../assets/food_bg.png";
+import { LOCATIONS, AUTOCOMPLETE_DATA } from "../constants/locations";
 
 const PageWrapper = styled(Box)`
   background: white;
@@ -60,37 +61,13 @@ const SearchInput = styled(Autocomplete)`
   }
 `;
 
-const locations = [
-  { postcode: "CT12EH", area: "Ramsgate" },
-  { postcode: "BS14DJ", area: "Bristol" },
-  { postcode: "L40TH", area: "Ormskirk" },
-  { postcode: "NE97TY", area: "Gateshead" },
-  { postcode: "SW1A1AA", area: "London (Westminster)" },
-  { postcode: "CF118AZ", area: "Cardiff" },
-  { postcode: "M160RA", area: "Manchester" },
-  { postcode: "EH11RE", area: "Edinburgh" },
-  { postcode: "BN11AE", area: "Worthing" },
-  { postcode: "CB74DL", area: "Ely" },
-  { postcode: "LS27HY", area: "Leeds" },
-  { postcode: "G38AG", area: "Glasgow" },
-  { postcode: "PL40DW", area: "Plymouth" },
-  { postcode: "B263QJ", area: "Birmingham" },
-  { postcode: "DH45QZ", area: "Houghton le Spring" },
-  { postcode: "BT71NN", area: "Belfast" },
-  { postcode: "EC4M7RF", area: "London (City of London)" },
-];
-
-const autocompleteData = locations.map(
-  (loc) => `${loc.area} - ${loc.postcode}`
-);
-
 export function HomePage() {
   const [value, setValue] = useState("");
   const dispatch = useDispatch();
 
   const handleSearch = (e) => {
     e.preventDefault();
-    const selectedLocation = locations.find(
+    const selectedLocation = LOCATIONS.find(
       (loc) => `${loc.area} - ${loc.postcode}` === value
     );
 
@@ -104,7 +81,7 @@ export function HomePage() {
     }
   };
 
-  const isValidSelection = autocompleteData.includes(value);
+  const isValidSelection = AUTOCOMPLETE_DATA.includes(value);
 
   return (
     <PageWrapper>
@@ -124,7 +101,7 @@ export function HomePage() {
                   size="xl"
                   radius="xl"
                   placeholder="Enter your area or postcode"
-                  data={autocompleteData}
+                  data={AUTOCOMPLETE_DATA}
                   value={value}
                   onChange={setValue}
                   rightSection={
