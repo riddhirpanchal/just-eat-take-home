@@ -96,35 +96,64 @@ Open your browser and navigate to **`http://localhost:8080`**.
 The project follows a feature-sliced design, with dedicated directories for tests.
 
 ```
-├── public/
-├── src/
-│   ├── components/
-│   │   ├── FilterSidebar.jsx
-│   │   ├── FilterSidebar.test.js
-│   │   ├── ...
-│   ├── features/
-│   │   ├── ...
-│   ├── hooks/
-│   │   ├── ...
-│   ├── pages/
-│   │   ├── ...
-│   ├── store/
-│   ├── utils/
-│   │   └── test-utils.jsx
-│   ├── App.jsx
-│   ├── App.test.js
-│   └── main.jsx
-├── tests-e2e/
-│   └── search.spec.js
-├── .dockerignore
-├── .swcrc
-├── Dockerfile             
+├── __mocks__
+│   └── fileMock.js
+├── Dockerfile
+├── eslint.config.js
+├── index.html
 ├── jest.config.js
 ├── jest.setup.js
-├── nginx.conf             
-├── playwright.config.js
+├── main
+├── nginx.conf
 ├── package.json
-└── vite.config.js
+├── playwright-report
+│   └── index.html
+├── playwright.config.js
+├── public
+│   └── favicon.svg
+├── README.md
+├── src
+│   ├── App.jsx
+│   ├── App.test.jsx
+│   ├── assets
+│   │   ├── food_bg.png
+│   │   └── react.svg
+│   ├── components
+│   │   ├── FilterSidebar.jsx
+│   │   ├── FilterSidebar.test.js
+│   │   ├── RestaurantCard.jsx
+│   │   ├── RestaurantCard.test.js
+│   │   ├── RestaurantList.jsx
+│   │   └── RestaurantList.test.js
+│   ├── config
+│   │   └── theme.js
+│   ├── constants
+│   │   └── locations.js
+│   ├── features
+│   │   ├── restaurants
+│   │   │   └── restaurantsApi.js
+│   │   └── search
+│   │       ├── searchSlice.js
+│   │       └── searchSlice.test.js
+│   ├── hooks
+│   │   ├── useRestaurantFilters.js
+│   │   └── useRestaurantFilters.test.js
+│   ├── main.jsx
+│   ├── mock.json
+│   ├── pages
+│   │   ├── HomePage.jsx
+│   │   ├── HomePage.test.jsx
+│   │   ├── RestaurantListPage.jsx
+│   │   └── RestaurantListPage.test.js
+│   ├── store
+│   │   └── index.js
+│   └── utils
+│       └── test-utils.jsx
+├── test-results
+├── tests-e2e
+│   └── search.spec.js
+├── vite.config.js
+└── yarn.lock
 ```
 
 ## 5. Code Breakdown
