@@ -84,7 +84,7 @@ This application is configured to be built and run as a production-ready Docker 
 Run below command to directly run the application from the image of dockerhub
 
 ```
-docker run -p 8080:80 riddhirpanchal/food-delivery-app:latest
+docker run -p 8080:80 riddhi1012/food-delivery-app:latest
 ```
 
 Open your browser and navigate to **`http://localhost:8080`**.   
