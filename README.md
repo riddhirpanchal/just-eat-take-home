@@ -53,50 +53,79 @@ Follow these instructions to get the project running on your local machine for d
       npx playwright test
       ```
 
+## Deployment with Docker
+
+This application is configured to be built and run as a production-ready Docker container using a multi-stage build for a small and secure final image.
+
+### Prerequisites
+
+* **Docker Desktop** must be installed and running.
+
+### Building and Running the Container
+
+1.  **Build the Docker image:**
+    From the project root, run the following command. This will build the React app and package it with Nginx.
+    ```bash
+    docker build -t food-delivery-app .
+    ```
+
+2.  **Run the Docker container:**
+    Once the image is built, run this command to start the application.
+    ```bash
+    docker run -p 8080:80 food-delivery-app
+    ```
+
+3.  **View the application:**
+    Open your browser and navigate to **`http://localhost:8080`**.   
+
+
+### Use deployed docker image
+
+Run below command to directly run the application from the image of dockerhub
+
+```
+docker run -p 8080:80 riddhirpanchal/food-delivery-app:latest
+```
+
+Open your browser and navigate to **`http://localhost:8080`**.   
+ 
 ---
 
 ## 3. Project Structure
 
 The project follows a feature-sliced design, with dedicated directories for tests.
 
+```
 ├── public/
 ├── src/
-│ ├── components/
-│ │ ├── FilterSidebar.jsx
-│ │ ├── FilterSidebar.test.js
-│ │ ├── RestaurantCard.jsx
-│ │ ├── RestaurantCard.test.js
-│ │ ├── RestaurantList.jsx
-│ │ └── RestaurantList.test.js
-│ ├── features/
-│ │ ├── restaurants/
-│ │ │ └── restaurantsApi.js
-│ │ └── search/
-│ │ ├── searchSlice.js
-│ │ └── searchSlice.test.js
-│ ├── hooks/
-│ │ ├── useRestaurantFilters.js
-│ │ └── useRestaurantFilters.test.js
-│ ├── pages/
-│ │ ├── HomePage.jsx
-│ │ ├── HomePage.test.js
-│ │ ├── RestaurantListPage.jsx
-│ │ └── RestaurantListPage.test.js
-│ ├── store/
-│ │ └── index.js
-│ ├── utils/
-│ │ └── test-utils.jsx
-│ ├── App.jsx
-│ ├── App.test.js
-│ └── main.jsx
+│   ├── components/
+│   │   ├── FilterSidebar.jsx
+│   │   ├── FilterSidebar.test.js
+│   │   ├── ...
+│   ├── features/
+│   │   ├── ...
+│   ├── hooks/
+│   │   ├── ...
+│   ├── pages/
+│   │   ├── ...
+│   ├── store/
+│   ├── utils/
+│   │   └── test-utils.jsx
+│   ├── App.jsx
+│   ├── App.test.js
+│   └── main.jsx
 ├── tests-e2e/
-│ └── search.spec.js
+│   └── search.spec.js
+├── .dockerignore
 ├── .swcrc
+├── Dockerfile             
 ├── jest.config.js
 ├── jest.setup.js
+├── nginx.conf             
 ├── playwright.config.js
 ├── package.json
 └── vite.config.js
+```
 
 ## 5. Code Breakdown
 
